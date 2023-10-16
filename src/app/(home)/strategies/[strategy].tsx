@@ -26,8 +26,8 @@ export default function Home() {
       <ScrollView refreshControl={<RefreshControl refreshing={false} enabled={true} onRefresh={() => console.log('refreshing')} />}>
         <VStack padding='6' space='8' >
           <VStack>
-            <Text color='blue.600' fontSize='16' fontWeight='medium'>Competências</Text>
-            <Text color='gray.600'>Aqui você pode achar as competências que deseja</Text>
+            <Text color='blue.600' fontSize='16' fontWeight='medium'>Estratégias</Text>
+            <Text color='gray.600'>Aqui você pode achar as estratégias que deseja</Text>
           </VStack>
 
           <Input placeholder='Pesquisar' />
@@ -40,7 +40,7 @@ export default function Home() {
                 <Card.Root>
                   <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
                   <Text fontSize='md'>Lembrar</Text>
-                  <Card.Button onPress={() => handleNavigate('title', 10)}>
+                  <Card.Button onPress={() => handleNavigate('estrategia info: lembrar', 10)}>
                     <Text color='white'>Ver Mais</Text>
                     <AntDesign name="arrowright" size={16} color='white' />
                   </Card.Button>

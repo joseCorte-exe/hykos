@@ -1,20 +1,10 @@
-import { Card } from '@components/card';
-import { Input } from '@components/form';
 import Text from "@components/text";
-import { AntDesign } from '@expo/vector-icons';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
-import { Box, FlatList, ScrollView, VStack } from 'native-base';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { Box, Image, ScrollView, VStack } from 'native-base';
 import { RefreshControl } from 'react-native';
 
 export default function Home() {
   const params = useLocalSearchParams()
-
-  function handleNavigate(title: string, id: number | string) {
-    router.setParams({
-      topicdId: String(id)
-    })
-    router.push(`strategies/${title}`)
-  }
 
   return (
     <>
@@ -24,30 +14,12 @@ export default function Home() {
         }}
       />
       <ScrollView refreshControl={<RefreshControl refreshing={false} enabled={true} onRefresh={() => console.log('refreshing')} />}>
-        <VStack padding='6' space='8' >
-          <VStack>
-            <Text color='blue.600' fontSize='16' fontWeight='medium'>Competências</Text>
-            <Text color='gray.600'>Aqui você pode achar as competências que deseja</Text>
-          </VStack>
-
-          <Input placeholder='Pesquisar' />
-
-          <VStack>
-            <FlatList
-              data={Array(10).fill(1)}
-              ItemSeparatorComponent={() => <Box height='4' />}
-              renderItem={() => (
-                <Card.Root>
-                  <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
-                  <Text fontSize='md'>Lembrar</Text>
-                  <Card.Button onPress={() => handleNavigate('title', 10)}>
-                    <Text color='white'>Ver Mais</Text>
-                    <AntDesign name="arrowright" size={16} color='white' />
-                  </Card.Button>
-                </Card.Root>
-              )}
-            />
-          </VStack>
+        <Box w='full' h='64'>
+          <Image source={{ uri: 'https://pelotasturismo.com.br/img/full/wcaRXTHVsiBx5qm2xAmoh33vgkTZG9nzQdpxBCCW.jpg' }} resizeMode="cover" size='full' />
+        </Box>
+        <VStack padding='6' space='2'>
+          <Text color='blue.600' fontSize='16' fontWeight='medium'>Estratégias</Text>
+          <Text color='gray.600'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Text>
         </VStack>
       </ScrollView>
     </>
