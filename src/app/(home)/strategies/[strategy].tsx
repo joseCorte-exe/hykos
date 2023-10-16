@@ -4,16 +4,24 @@ import Text from "@components/text";
 import { AntDesign } from '@expo/vector-icons';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { Box, FlatList, ScrollView, VStack } from 'native-base';
+import { useState } from 'react';
 import { RefreshControl } from 'react-native';
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [cardId, setCardId] = useState<number | string>()
   const params = useLocalSearchParams()
 
-  function handleNavigate(title: string, id: number | string) {
-    router.setParams({
-      topicdId: String(id)
-    })
-    router.push(`strategies/info/${title}`)
+  async function handleNavigate(title: string, id: number | string) {
+    setCardId(id)
+    setIsLoading(true)
+    setTimeout(() => {
+      router.setParams({
+        topicId: String(id)
+      })
+      router.push(`strategies/info/${title}`)
+      setIsLoading(false)
+    }, 500)
   }
 
   return (
@@ -36,11 +44,11 @@ export default function Home() {
             <FlatList
               data={Array(10).fill(1)}
               ItemSeparatorComponent={() => <Box height='4' />}
-              renderItem={() => (
+              renderItem={({ index }) => (
                 <Card.Root>
                   <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
                   <Text fontSize='md'>Lembrar</Text>
-                  <Card.Button onPress={() => handleNavigate('estrategia info: lembrar', 10)}>
+                  <Card.Button onPress={() => handleNavigate('estrategia info: lembrar', index)} isLoading={cardId === index && isLoading} disabled={isLoading}>
                     <Text color='white'>Ver Mais</Text>
                     <AntDesign name="arrowright" size={16} color='white' />
                   </Card.Button>
