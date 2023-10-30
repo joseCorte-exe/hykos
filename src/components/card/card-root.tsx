@@ -4,6 +4,7 @@ import { PropsWithChildren } from "react";
 export function Root({ children }: PropsWithChildren) {
   return (
     <VStack
+      minW='full'
       flex='1'
       space='2'
       alignItems='center'

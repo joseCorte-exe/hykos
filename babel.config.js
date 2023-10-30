@@ -19,7 +19,9 @@ module.exports = function(api) {
             '@services': './src/services',
             '@shared': './src/shared',
             '@styles': './src/styles',
-            '@templates': './src/templates'
+            '@templates': './src/templates',
+            '@lib': './src/lib',
+            '@store': './src/store'
           }
         }
       ]

@@ -2,27 +2,96 @@ import { Card } from '@components/card';
 import { Input } from '@components/form';
 import Text from "@components/text";
 import { AntDesign } from '@expo/vector-icons';
+import { supabase } from '@lib/supabase';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
-import { Box, FlatList, ScrollView, VStack } from 'native-base';
-import { useState } from 'react';
-import { RefreshControl } from 'react-native';
+import { Box, Center, FlatList, ScrollView, VStack } from 'native-base';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, RefreshControl } from 'react-native';
 
-export default function Home() {
+function Page({ skills, onRefresh }: { skills: Array<any>, onRefresh: () => void }) {
   const [isLoading, setIsLoading] = useState(false)
   const [cardId, setCardId] = useState<number | string>()
-  const params = useLocalSearchParams()
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   async function handleNavigate(title: string, id: number | string) {
     setCardId(id)
     setIsLoading(true)
     setTimeout(() => {
-      router.setParams({
-        topicId: String(id)
-      })
-      router.push(`strategies/info/${title}`)
+      router.push({ pathname: `strategies/info/${title}`, params: { skillId: String(id) } })
       setIsLoading(false)
     }, 500)
   }
+
+  function handleRefresh() {
+    setIsRefreshing(true)
+    onRefresh()
+    setIsRefreshing(false)
+  }
+
+  return (
+    <ScrollView refreshControl={<RefreshControl refreshing={isRefreshing} enabled={true} onRefresh={handleRefresh} />}>
+      <VStack padding='6' space='8' >
+        <VStack>
+          <Text color='blue.600' fontSize='16' fontWeight='medium'>Estratégias</Text>
+          <Text color='gray.600'>Aqui você pode achar as estratégias que deseja</Text>
+        </VStack>
+
+        <Input placeholder='Pesquisar' />
+
+        <VStack>
+          <FlatList
+            data={skills}
+            ItemSeparatorComponent={() => <Box height='4' />}
+            renderItem={({ item }: any) => (
+              <Card.Root>
+                <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
+                <Text fontSize='md' textAlign='center'>{item.title}</Text>
+                <Card.Button onPress={() => handleNavigate(item.title, item.id)} isLoading={cardId === item.id && isLoading} disabled={isLoading}>
+                  <Text color='white'>Ver Mais</Text>
+                  <AntDesign name="arrowright" size={16} color='white' />
+                </Card.Button>
+              </Card.Root>
+            )}
+          />
+        </VStack>
+      </VStack>
+    </ScrollView>
+  )
+}
+
+export default function Home() {
+  const [isFetching, setIsFetching] = useState(false)
+  const params = useLocalSearchParams()
+
+  const [skills, setSkills] = useState([])
+
+  async function handleGetStrategies() {
+    setIsFetching(true)
+    try {
+      const { data: relationData, error: relationError } = await supabase
+        .from('strategies_skills')
+        .select('*')
+        .eq('strategy_id', params.strategyId)
+
+      const skillsIds = relationData?.map((skill) => skill.skill_id) ?? []
+
+      const { data, error } = await supabase
+        .from('skills')
+        .select('*')
+        .in('id', skillsIds)
+
+      setSkills(data as [])
+      if (error) throw new Error(JSON.stringify({ ...error }) || '')
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsFetching(false)
+    }
+  }
+
+  useEffect(() => {
+    handleGetStrategies()
+  }, [])
 
   return (
     <>
@@ -31,33 +100,16 @@ export default function Home() {
           headerTitle: (props) => <Text color={props.tintColor} fontSize='md'>{String(params.strategy)}</Text>
         }}
       />
-      <ScrollView refreshControl={<RefreshControl refreshing={false} enabled={true} onRefresh={() => console.log('refreshing')} />}>
-        <VStack padding='6' space='8' >
-          <VStack>
-            <Text color='blue.600' fontSize='16' fontWeight='medium'>Estratégias</Text>
-            <Text color='gray.600'>Aqui você pode achar as estratégias que deseja</Text>
-          </VStack>
+      {
+        !isFetching
+          ? (<Page skills={skills} onRefresh={handleGetStrategies} />)
+          : (
+            <Center h='full'>
+              <ActivityIndicator color='#1E3A8A' />
+            </Center>
+          )
+      }
 
-          <Input placeholder='Pesquisar' />
-
-          <VStack>
-            <FlatList
-              data={Array(10).fill(1)}
-              ItemSeparatorComponent={() => <Box height='4' />}
-              renderItem={({ index }) => (
-                <Card.Root>
-                  <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
-                  <Text fontSize='md'>Lembrar</Text>
-                  <Card.Button onPress={() => handleNavigate('estrategia info: lembrar', index)} isLoading={cardId === index && isLoading} disabled={isLoading}>
-                    <Text color='white'>Ver Mais</Text>
-                    <AntDesign name="arrowright" size={16} color='white' />
-                  </Card.Button>
-                </Card.Root>
-              )}
-            />
-          </VStack>
-        </VStack>
-      </ScrollView>
     </>
   )
 }
