@@ -2,13 +2,15 @@ import { Button, Input } from "@components/form";
 import Text from "@components/text";
 import { Link } from "@components/text/link";
 import { supabase } from "@lib/supabase";
+import { AuthError } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import { VStack } from "native-base";
 import { useState } from "react";
+import Toast from "react-native-toast-message";
 
 export default function Page() {
-  const [email, setEmail] = useState('josecorte-corte@hotmail.com')
-  const [password, setPassword] = useState('Molthypick34')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   async function handleSignin({ email, password }: { email: string, password: string }) {
     try {
@@ -17,9 +19,14 @@ export default function Page() {
         password
       })
 
-      if (error) throw new Error(JSON.stringify({ ...error }) || '')
-    } catch (err) {
-      console.error(err)
+      if (error) throw new Error(error.message)
+
+      if (data) router.push('home')
+    } catch (err: any | AuthError) {
+      Toast.show({
+        type: 'error',
+        text1: err.message,
+      })
     }
   }
 

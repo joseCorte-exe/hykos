@@ -1,5 +1,6 @@
 import { Slot } from "expo-router";
 import { NativeBaseProvider, extendTheme } from "native-base";
+import Toast from 'react-native-toast-message';
 
 // Root (Native Base Provider, _App.tsx, Global Layout)
 export default function Root() {
@@ -17,6 +18,7 @@ export default function Root() {
   return (
     <NativeBaseProvider theme={theme}>
       <Slot />
+      <Toast />
     </NativeBaseProvider>
   );
 }
