@@ -17,6 +17,7 @@
     "expo-router": "^2.0.0",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
+    "lodash.debounce": "^4.0.8",
     "native-base": "^3.4.28",
     "react": "18.2.0",
     "react-hook-form": "^7.47.0",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/react": "~18.2.14",
     "typescript": "^5.1.3"
   },

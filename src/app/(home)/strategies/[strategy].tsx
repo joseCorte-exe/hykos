@@ -4,14 +4,17 @@ import Text from "@components/text";
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '@lib/supabase';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
+import debounce from 'lodash.debounce';
 import { Box, Center, FlatList, ScrollView, VStack } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, RefreshControl } from 'react-native';
 
-function Page({ skills, onRefresh }: { skills: Array<any>, onRefresh: () => void }) {
+function Page({ skills: skillsProp, onRefresh }: { skills: Array<any>, onRefresh: () => void }) {
   const [isLoading, setIsLoading] = useState(false)
   const [cardId, setCardId] = useState<number | string>()
   const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const [skills, setSkills] = useState(skillsProp)
 
   async function handleNavigate(title: string, id: number | string) {
     setCardId(id)
@@ -28,6 +31,15 @@ function Page({ skills, onRefresh }: { skills: Array<any>, onRefresh: () => void
     setIsRefreshing(false)
   }
 
+  const debouncedSearch = useMemo(() => {
+    return debounce(handleSearch, 300);
+  }, []);
+  async function handleSearch(search: string) {
+    if (!!search.length)
+      setSkills((old) => [old.find((s) => (s.title as string).includes(search))])
+    else
+      setSkills(skillsProp)
+  }
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={isRefreshing} enabled={true} onRefresh={handleRefresh} />}>
       <VStack padding='6' space='8' >
@@ -36,7 +48,7 @@ function Page({ skills, onRefresh }: { skills: Array<any>, onRefresh: () => void
           <Text color='gray.600'>Aqui você pode achar as estratégias que deseja</Text>
         </VStack>
 
-        <Input placeholder='Pesquisar' />
+        <Input placeholder='Pesquisar' onChangeText={debouncedSearch} />
 
         <VStack>
           <FlatList

@@ -4,9 +4,11 @@ import Text from "@components/text";
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '@lib/supabase';
 import { Stack, router } from 'expo-router';
+import debounce from 'lodash.debounce';
 import { Box, FlatList, HStack, ScrollView, VStack } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { RefreshControl } from 'react-native';
+import Toast from "react-native-toast-message";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -14,11 +16,20 @@ export default function Home() {
   const [strategies, setStrategies] = useState([])
 
   async function handleGetStrategies() {
-    const { data, error } = await supabase
-      .from('strategies')
-      .select('*')
+    try {
+      const { data, error } = await supabase
+        .from('strategies')
+        .select('*')
 
-    setStrategies(data as [])
+      setStrategies(data as [])
+
+      if (error) throw Error(error?.message)
+    } catch (err: any) {
+      Toast.show({
+        type: 'error',
+        text1: err.message,
+      })
+    }
   }
 
   async function handleNavigate(title: string, id: number | string) {
@@ -28,6 +39,36 @@ export default function Home() {
       router.push({ pathname: `strategies/${title}`, params: { strategyId: id } })
       setIsLoading(false)
     }, 100)
+  }
+
+  const debouncedSearch = useMemo(() => {
+    return debounce(handleSearch, 300);
+  }, [strategies]);
+  async function handleSearch(search: string) {
+    try {
+      let data
+      if (search.length)
+        data = await supabase
+          .from('strategies')
+          .select()
+          .textSearch('title', `'${search}'`)
+      else
+        data = await supabase
+          .from('strategies')
+          .select('*')
+
+      console.log(data)
+
+      setStrategies(data.data as [])
+
+      if (data.error) throw Error(data.error?.message)
+    } catch (err: any) {
+      Toast.show({
+        type: 'error',
+        text1: err,
+      })
+    }
+    console.log(search)
   }
 
   useEffect(() => {
@@ -54,7 +95,10 @@ export default function Home() {
             <Text color='gray.600'>Aqui você pode achar as competências que deseja</Text>
           </VStack>
 
-          <Input placeholder='Pesquisar' />
+          <Input
+            placeholder='Pesquisar'
+            onChangeText={debouncedSearch}
+          />
 
           <VStack>
             <HStack space='md'>
