@@ -41,7 +41,13 @@ export default function Home() {
           headerTitle: (props) => <Text color={props.tintColor} fontSize='lg'>Competências</Text>
         }}
       />
-      <ScrollView refreshControl={<RefreshControl refreshing={false} enabled={true} onRefresh={() => console.log('refreshing')} />}>
+      <ScrollView refreshControl={
+        <RefreshControl
+          refreshing={false}
+          enabled={true}
+          onRefresh={() => console.log('refreshing')}
+        />
+      }>
         <VStack padding='6' space='8' >
           <VStack>
             <Text color='blue.600' fontSize='16' fontWeight='medium'>Competências</Text>
@@ -59,7 +65,11 @@ export default function Home() {
                   <Card.Root>
                     <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
                     <Text fontSize='md' textAlign='center'>{item.title}</Text>
-                    <Card.Button onPress={() => handleNavigate(item.title, item.id)} isLoading={cardId === item.id && isLoading} disabled={isLoading}>
+                    <Card.Button
+                      onPress={() => handleNavigate(item.title, item.id)}
+                      isLoading={cardId === item.id && isLoading}
+                      disabled={isLoading}
+                    >
                       <Text color='white'>Ver Mais</Text>
                       <AntDesign name="arrowright" size={16} color='white' />
                     </Card.Button>
@@ -73,7 +83,11 @@ export default function Home() {
                   <Card.Root>
                     <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
                     <Text fontSize='md' textAlign='center'>{item.title}</Text>
-                    <Card.Button onPress={() => handleNavigate(item.title, item.id)} isLoading={cardId === item.id && isLoading} disabled={isLoading}>
+                    <Card.Button
+                      onPress={() => handleNavigate(item.title, item.id)}
+                      isLoading={cardId === item.id && isLoading}
+                      disabled={isLoading}
+                    >
                       <Text color='white'>Ver Mais</Text>
                       <AntDesign name="arrowright" size={16} color='white' />
                     </Card.Button>

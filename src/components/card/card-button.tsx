@@ -1,8 +1,8 @@
 import { Button as NBButton } from "@components/form";
 import { HStack } from "native-base";
-import { InterfaceIconButtonProps } from "native-base/lib/typescript/components/composites/IconButton/types";
+import { InterfaceButtonProps } from "native-base/lib/typescript/components/primitives/Button/types";
 
-export function Button({ children, ...rest }: InterfaceIconButtonProps) {
+export function Button({ children, ...rest }: InterfaceButtonProps) {
   return (
     <NBButton
       w='full'
