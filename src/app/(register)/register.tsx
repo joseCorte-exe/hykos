@@ -33,6 +33,7 @@ export default function Page() {
 
   async function handleSignUp() {
     try {
+      if (useUser.password !== useUser.confirmPassword) throw Error('as senhas devem ser iguais')
       setIsCreatingAccountLoading(true)
       const { data, error } = await supabase.auth.signUp({
         email: useUser.email,
@@ -168,13 +169,23 @@ function FormInstitution(props: PageComponentType) {
         mask="99/99/9999"
         keyboardType="numeric"
       />
-      <Input
-        placeholder="Nivel de formação"
-        onChangeText={props.setDegree}
-        value={props.degree}
-        mask="99/99/9999"
-        keyboardType="numeric"
-      />
+      <Select
+        placeholder="Nível de formação"
+        onValueChange={props.setDegree}
+        selectedValue={props.degree}
+        minWidth="200"
+        accessibilityLabel="Choose Degree"
+        _selectedItem={{
+          bg: "teal.600",
+          endIcon: <CheckIcon size="5" />
+        }}
+      >
+        <Select.Item label='Graduação' value='graduacao' />
+        <Select.Item label='Bacharelado' value='bacharelado' />
+        <Select.Item label='Licenciatura' value='licenciatura' />
+        <Select.Item label='Pós-Graduação' value='posgraduacao' />
+        <Select.Item label='Mestrado' value='mestrado' />
+      </Select>
     </VStack>
   )
 }

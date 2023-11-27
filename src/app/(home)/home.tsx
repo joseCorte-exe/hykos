@@ -32,11 +32,11 @@ export default function Home() {
     }
   }
 
-  async function handleNavigate(title: string, id: number | string) {
+  async function handleNavigate(title: string, description: number | string, id: number | string) {
     setCardId(id)
     setIsLoading(true)
     setTimeout(() => {
-      router.push({ pathname: `strategies/${title}`, params: { strategyId: id } })
+      router.push({ pathname: `strategies/${title}`, params: { strategyId: id, description } })
       setIsLoading(false)
     }, 100)
   }
@@ -51,13 +51,11 @@ export default function Home() {
         data = await supabase
           .from('strategies')
           .select()
-          .textSearch('title', `'${search}'`)
+          .like('title', `%${search}%`)
       else
         data = await supabase
           .from('strategies')
           .select('*')
-
-      console.log(data)
 
       setStrategies(data.data as [])
 
@@ -108,10 +106,10 @@ export default function Home() {
                 renderItem={({ item }: any) => (
                   <Card.Root>
                     <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
-                    <Text fontSize='md' textAlign='center'>{item.title}</Text>
+                    <Text fontSize='md' textAlign='center'>{item?.title}</Text>
                     <Card.Button
-                      onPress={() => handleNavigate(item.title, item.id)}
-                      isLoading={cardId === item.id && isLoading}
+                      onPress={() => handleNavigate(item?.title, item?.description, item?.id)}
+                      isLoading={cardId === item?.id && isLoading}
                       disabled={isLoading}
                     >
                       <Text color='white'>Ver Mais</Text>
@@ -128,8 +126,8 @@ export default function Home() {
                     <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
                     <Text fontSize='md' textAlign='center'>{item.title}</Text>
                     <Card.Button
-                      onPress={() => handleNavigate(item.title, item.id)}
-                      isLoading={cardId === item.id && isLoading}
+                      onPress={() => handleNavigate(item?.title, item?.description, item?.id)}
+                      isLoading={cardId === item?.id && isLoading}
                       disabled={isLoading}
                     >
                       <Text color='white'>Ver Mais</Text>

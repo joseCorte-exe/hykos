@@ -1,13 +1,13 @@
 import Text from "@components/text";
 import { supabase } from "@lib/supabase";
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { Box, Image, ScrollView, VStack } from 'native-base';
+import { Box, FlatList, Image, ScrollView, VStack } from 'native-base';
 import { useEffect, useState } from "react";
 import { RefreshControl } from 'react-native';
 
 export default function Home() {
   const [isFetching, setIsFetching] = useState(false)
-  const [skill, setSkill] = useState({})
+  const [skill, setSkill] = useState<any>({})
   const params = useLocalSearchParams()
 
   async function handleGetStrategies() {
@@ -47,6 +47,20 @@ export default function Home() {
         <VStack padding='6' space='2'>
           <Text color='blue.600' fontSize='16' fontWeight='medium'>{skill?.title}</Text>
           <Text color='gray.600'>{skill?.description}</Text>
+        </VStack>
+        <VStack padding='6' space='2'>
+          <Text color='blue.600' fontSize='16' fontWeight='medium'>Instrumentos Avaliativos</Text>
+          <FlatList
+            flexWrap='wrap'
+            ItemSeparatorComponent={() => <Box h='2' />}
+            data={skill.evaluation_instruments?.evaluation_instruments}
+            flex={1}
+            renderItem={({ index, item }) => (
+              <Box p='3' bgColor='gray.300' borderRadius='md' flexBasis='fit-content'>
+                <Text flexBasis='fit-content'>{item}</Text>
+              </Box>
+            )}
+          />
         </VStack>
       </ScrollView>
     </>
