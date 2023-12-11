@@ -8,15 +8,17 @@ import debounce from 'lodash.debounce';
 import { Box, Center, FlatList, Image, ScrollView, VStack } from 'native-base';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, RefreshControl } from 'react-native';
+import { ServiceEnum } from '../home';
 
 type PageType = {
   skills: Array<any>
   onRefresh: () => void
   description: string
-  title: string
+  title: string,
+  service: string
 }
 
-function Page({ skills: skillsProp, onRefresh, description, title }: PageType) {
+function Page({ skills: skillsProp, onRefresh, description, title, service }: PageType) {
   const [isLoading, setIsLoading] = useState(false)
   const [cardId, setCardId] = useState<number | string>()
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -27,7 +29,7 @@ function Page({ skills: skillsProp, onRefresh, description, title }: PageType) {
     setCardId(id)
     setIsLoading(true)
     setTimeout(() => {
-      router.push({ pathname: `strategies/info/${title}`, params: { skillId: String(id) } })
+      router.push({ pathname: `service/info/${title}`, params: { serviceId: String(id), service, title } })
       setIsLoading(false)
     }, 500)
   }
@@ -53,14 +55,12 @@ function Page({ skills: skillsProp, onRefresh, description, title }: PageType) {
       setSkills(skillsProp)
   }
 
-  useEffect(() => {
-    console.log(skills)
-  }, [skills])
+  const serviceName = service === ServiceEnum.SKILLS ? ServiceEnum.STRATEGY : ServiceEnum.SKILLS
 
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={isRefreshing} enabled={true} onRefresh={handleRefresh} />}>
       <Box w='full' h='64'>
-        <Image source={{ uri: 'https://pelotasturismo.com.br/img/full/wcaRXTHVsiBx5qm2xAmoh33vgkTZG9nzQdpxBCCW.jpg' }} resizeMode="cover" size='full' />
+        <Image alt='' source={{ uri: 'https://pelotasturismo.com.br/img/full/wcaRXTHVsiBx5qm2xAmoh33vgkTZG9nzQdpxBCCW.jpg' }} resizeMode="cover" size='full' />
       </Box>
       <VStack padding='6' space='8' size='full'>
 
@@ -71,7 +71,7 @@ function Page({ skills: skillsProp, onRefresh, description, title }: PageType) {
 
         <VStack>
           <VStack mb='4'>
-            <Text color='blue.600' fontSize='16' fontWeight='medium'>Estratégias</Text>
+            <Text color='blue.600' fontSize='16' fontWeight='medium'>{serviceName}</Text>
             <Text color='gray.600'>Aqui você pode achar as estratégias da competência</Text>
           </VStack>
           <Input placeholder='Pesquisar' onChangeText={debouncedSearch} mb='4' />
@@ -109,15 +109,16 @@ export default function Home() {
   async function handleGetStrategies() {
     setIsFetching(true)
     try {
+      const relationalTableRequiredColumn = params.service === ServiceEnum.SKILLS ? 'skill_id' : 'strategy_id'
       const { data: relationData, error: relationError } = await supabase
         .from('skills_strategies')
         .select('*')
-        .eq('strategy_id', params.strategyId)
+        .eq(relationalTableRequiredColumn, params.serviceId)
 
-      const skillsIds = relationData?.map((skill) => skill.skill_id) ?? []
+      const skillsIds = relationData?.map((value) => value[params.service === ServiceEnum.SKILLS ? 'strategy_id' : 'skill_id']) ?? []
 
       const { data, error } = await supabase
-        .from('skills')
+        .from(params.service === ServiceEnum.SKILLS ? 'strategies' : 'skills')
         .select('*')
         .in('id', skillsIds)
 
@@ -134,18 +135,16 @@ export default function Home() {
     handleGetStrategies()
   }, [])
 
-  console.log('params', params)
-
   return (
     <>
       <Stack.Screen
         options={{
-          headerTitle: (props) => <Text color={props.tintColor} fontSize='md'>{String(params.strategy)}</Text>
+          headerTitle: (props) => <Text color={props.tintColor} fontSize='md'>{String(params.title)}</Text>
         }}
       />
       {
         !isFetching
-          ? (<Page skills={skills} onRefresh={handleGetStrategies} description={params.description as string} title={params.strategy as string} />)
+          ? (<Page skills={skills} onRefresh={handleGetStrategies} description={params.description as string} title={params.title as string} service={params.service as string} />)
           : (
             <Center h='full'>
               <ActivityIndicator color='#1E3A8A' />

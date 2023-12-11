@@ -184,6 +184,7 @@ function FormInstitution(props: PageComponentType) {
         <Select.Item label='Bacharelado' value='bacharelado' />
         <Select.Item label='Licenciatura' value='licenciatura' />
         <Select.Item label='Pós-Graduação' value='posgraduacao' />
+        <Select.Item label='Doutorado' value='doutorado' />
         <Select.Item label='Mestrado' value='mestrado' />
       </Select>
     </VStack>
