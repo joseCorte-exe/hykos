@@ -47,7 +47,7 @@ export default function Home() {
           <Text color='blue.600' fontSize='16' fontWeight='medium'>{skill?.title}</Text>
           <Text color='gray.600'>{skill?.description}</Text>
         </VStack>
-        <VStack padding='6' space='2'>
+        {params.service === ServiceEnum.SKILLS && <VStack padding='6' space='2'>
           <Text color='blue.600' fontSize='16' fontWeight='medium'>Sequência de aplicação</Text>
           <FlatList
             flexWrap='wrap'
@@ -56,12 +56,12 @@ export default function Home() {
             flex={1}
             renderItem={({ index, item }) => (
               <Box p='3' bgColor='gray.300' borderRadius='md' flexBasis='fit-content'>
-                <Text flexBasis='fit-content'>{item}</Text>
+                <Text flexBasis='fit-content'>{item as any}</Text>
               </Box>
             )}
           />
           <Button bgColor='blue.700' mt='6'>Como Avaliar</Button>
-        </VStack>
+        </VStack>}
       </ScrollView>
     </>
   )
