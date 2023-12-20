@@ -57,8 +57,7 @@ function Page({ skills: skillsProp, onRefresh, description, title, service, imag
   }
 
   const serviceName = service === ServiceEnum.SKILLS ? ServiceEnum.STRATEGY : ServiceEnum.SKILLS
-
-  console.log(image)
+  const cardImage = service !== 'Competências' ? "https://cdn-icons-png.flaticon.com/512/2847/2847502.png" : 'https://cdn-icons-png.flaticon.com/512/609/609050.png'
 
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={isRefreshing} enabled={true} onRefresh={handleRefresh} />}>
@@ -86,7 +85,7 @@ function Page({ skills: skillsProp, onRefresh, description, title, service, imag
                 ItemSeparatorComponent={() => <Box height='4' />}
                 renderItem={({ item }: any) => (
                   <Card.Root>
-                    <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
+                    <Card.Image src={cardImage} />
                     <Text fontSize='md' textAlign='center'>{item?.title}</Text>
                     <Card.Button onPress={() => handleNavigate(item?.title, item?.id)} isLoading={cardId === item?.id && isLoading} disabled={isLoading}>
                       <Text color='white'>Ver Mais</Text>
