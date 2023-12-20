@@ -1,13 +1,15 @@
+import { Modal } from "@components/modal";
 import Text from "@components/text";
 import { supabase } from "@lib/supabase";
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { Box, Button, FlatList, Image, ScrollView, VStack } from 'native-base';
 import { useEffect, useState } from "react";
-import { RefreshControl } from 'react-native';
+import { RefreshControl, TouchableOpacity } from 'react-native';
 import { ServiceEnum } from "../../home";
 
 export default function Home() {
   const [isFetching, setIsFetching] = useState(false)
+  const [open, setOpen] = useState(false)
   const [skill, setSkill] = useState<any>({})
   const params = useLocalSearchParams()
 
@@ -28,12 +30,26 @@ export default function Home() {
     }
   }
 
+  async function handleNavigate() {
+    setOpen(true)
+  }
+
   useEffect(() => {
     handleGetStrategies()
   }, [])
 
   return (
     <>
+      <Modal isVisible={open} close={() => setOpen(false)}>
+        <ScrollView>
+          <TouchableOpacity activeOpacity={1}>
+            <Text color='blue.600' fontSize='16' fontWeight='medium' alignSelf='flex-start'>Procedimento Sugestivo</Text>
+            <Text mt={5}>{skill.suggestive_procedure?.replaceAll(';', '\n')}</Text>
+            <Text color='blue.600' fontSize='16' fontWeight='medium' alignSelf='flex-start' mt={10}>Procedimento Sugestivo</Text>
+            <Text mt={5}>{skill?.assessment_criteria?.replaceAll('.', '\n')?.replaceAll(':', ':\n')}</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </Modal>
       <Stack.Screen
         options={{
           headerTitle: (props) => <Text color={props.tintColor} fontSize='md'>{String(params.title)}</Text>
@@ -41,7 +57,7 @@ export default function Home() {
       />
       <ScrollView refreshControl={<RefreshControl refreshing={false} enabled={true} onRefresh={() => console.log('refreshing')} />}>
         <Box w='full' h='64'>
-          <Image alt='' source={{ uri: 'https://pelotasturismo.com.br/img/full/wcaRXTHVsiBx5qm2xAmoh33vgkTZG9nzQdpxBCCW.jpg' }} resizeMode="cover" size='full' />
+          <Image alt='' source={{ uri: skill.image }} resizeMode="cover" size='full' />
         </Box>
         <VStack padding='6' space='2'>
           <Text color='blue.600' fontSize='16' fontWeight='medium'>{skill?.title}</Text>
@@ -52,7 +68,7 @@ export default function Home() {
           <FlatList
             flexWrap='wrap'
             ItemSeparatorComponent={() => <Box h='2' />}
-            data={skill.evaluation_instruments?.evaluation_instruments}
+            data={skill.how_evaluation?.evaluation_instruments}
             flex={1}
             renderItem={({ index, item }) => (
               <Box p='3' bgColor='gray.300' borderRadius='md' flexBasis='fit-content'>
@@ -60,7 +76,7 @@ export default function Home() {
               </Box>
             )}
           />
-          <Button bgColor='blue.700' mt='6'>Como Avaliar</Button>
+          <Button bgColor='blue.700' mt='6' onPress={handleNavigate}>Como Avaliar</Button>
         </VStack>}
       </ScrollView>
     </>

@@ -36,7 +36,7 @@ export default function Page() {
     <VStack space='28' h='full' justifyContent='center' p={6}>
       <VStack space='2'>
         <Text fontSize='20'>Bem vindo ao <Text fontSize='24' color='blue.600'>HelpStudies</Text>!</Text>
-        <Text>Faça login ou registre-se para aproveitar do melhor ds metodos de ensino</Text>
+        <Text>Faça login ou registre-se para aproveitar do melhor das estratégias de ensino</Text>
       </VStack>
 
       <VStack>

@@ -27,8 +27,8 @@ export default function Layout() {
       })}
     >
       <Stack.Screen name="Home" />
-      <Stack.Screen name="[service]" getId={(params) => String({ name: 'tome' })} />
-      <Stack.Screen name="[serviceInfo]" getId={(params) => String({ name: 'tome' })} />
+      <Stack.Screen name="[service]" />
+      <Stack.Screen name="[serviceInfo]" />
     </Stack>
   );
 }

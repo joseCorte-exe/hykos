@@ -15,10 +15,11 @@ type PageType = {
   onRefresh: () => void
   description: string
   title: string,
-  service: string
+  service: string,
+  image: string
 }
 
-function Page({ skills: skillsProp, onRefresh, description, title, service }: PageType) {
+function Page({ skills: skillsProp, onRefresh, description, title, service, image }: PageType) {
   const [isLoading, setIsLoading] = useState(false)
   const [cardId, setCardId] = useState<number | string>()
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -57,10 +58,12 @@ function Page({ skills: skillsProp, onRefresh, description, title, service }: Pa
 
   const serviceName = service === ServiceEnum.SKILLS ? ServiceEnum.STRATEGY : ServiceEnum.SKILLS
 
+  console.log(image)
+
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={isRefreshing} enabled={true} onRefresh={handleRefresh} />}>
       <Box w='full' h='64'>
-        <Image alt='' source={{ uri: 'https://pelotasturismo.com.br/img/full/wcaRXTHVsiBx5qm2xAmoh33vgkTZG9nzQdpxBCCW.jpg' }} resizeMode="cover" size='full' />
+        <Image alt='banner' source={{ uri: image }} resizeMode="cover" size='full' />
       </Box>
       <VStack padding='6' space='8' size='full'>
 
@@ -104,6 +107,8 @@ export default function Home() {
   const [isFetching, setIsFetching] = useState(false)
   const params = useLocalSearchParams()
 
+  console.log(params)
+
   const [skills, setSkills] = useState([])
 
   async function handleGetStrategies() {
@@ -144,7 +149,16 @@ export default function Home() {
       />
       {
         !isFetching
-          ? (<Page skills={skills} onRefresh={handleGetStrategies} description={params.description as string} title={params.title as string} service={params.service as string} />)
+          ? (
+            <Page
+              skills={skills}
+              onRefresh={handleGetStrategies}
+              description={params.description as string}
+              title={params.title as string}
+              service={params.service as string}
+              image={params.image}
+            />
+          )
           : (
             <Center h='full'>
               <ActivityIndicator color='#1E3A8A' />

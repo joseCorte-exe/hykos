@@ -57,11 +57,11 @@ export default function Home() {
     }
   }
 
-  async function handleNavigate(title: string, description: number | string, id: number | string) {
+  async function handleNavigate(title: string, description: number | string, id: number | string, image: string) {
     setCardId(id)
     setIsLoading(true)
     setTimeout(() => {
-      router.push({ pathname: `service/${title}`, params: { title, serviceId: id, description, service } })
+      router.push({ pathname: `service/${title}`, params: { title, serviceId: id, description, service, image } })
       setIsLoading(false)
     }, 100)
   }
@@ -76,7 +76,7 @@ export default function Home() {
         data = await supabase
           .from('strategies')
           .select()
-          .like('title', `%${search}%`)
+          .like('title', `%${search.toUpperCase()}%`)
       else
         data = await supabase
           .from('strategies')
@@ -147,7 +147,7 @@ export default function Home() {
                       <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
                       <Text fontSize='md' textAlign='center'>{item?.title}</Text>
                       <Card.Button
-                        onPress={() => handleNavigate(item?.title, item?.description, item?.id)}
+                        onPress={() => handleNavigate(item?.title, item?.description, item?.id, item?.image)}
                         isLoading={cardId === item?.id && isLoading}
                         disabled={isLoading}
                       >
@@ -165,7 +165,7 @@ export default function Home() {
                       <Card.Image src="https://cdn-icons-png.flaticon.com/512/2847/2847502.png" />
                       <Text fontSize='md' textAlign='center'>{item.title}</Text>
                       <Card.Button
-                        onPress={() => handleNavigate(item?.title, item?.description, item?.id)}
+                        onPress={() => handleNavigate(item?.title, item?.description, item?.id, item?.image)}
                         isLoading={cardId === item?.id && isLoading}
                         disabled={isLoading}
                       >
