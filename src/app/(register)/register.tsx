@@ -6,7 +6,7 @@ import { UseUserRegisteringType, useUserRegistering } from "@store/useUserRegist
 import { AuthError } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import { CheckIcon, HStack, Select, VStack } from "native-base";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Toast from "react-native-toast-message";
 import { z } from "zod";
 import { statesAndCities } from "../shared/mock/states-and-cities";
@@ -97,6 +97,8 @@ export default function Page() {
   }
   const PageComponent = Pages[step]
 
+  console.log('render')
+
   return (
     <VStack space='28' h='full' justifyContent='center' p={6}>
       <VStack space='2'>
@@ -144,7 +146,16 @@ function FormEmail(props: PageComponentType) {
 }
 
 function FormInstitution(props: PageComponentType) {
-  console.log(props)
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [filtered, setFiltered] = useState<typeof universities>(universities);
+
+  const inputRef = useRef()
+
+  const filter = (value: string) => {
+    const filteredAux = universities.filter(u => searchValue.length ? u.NOME_DA_IES.includes(searchValue) : true)
+    setFiltered(u => filteredAux)
+  }
+
   return (
     <VStack space='2'>
       <Select
@@ -157,9 +168,27 @@ function FormInstitution(props: PageComponentType) {
           bg: "teal.600",
           endIcon: <CheckIcon size="5" />
         }}
+        _actionSheetBody={{
+          ListHeaderComponent: (
+            <HStack alignItems='start' space={2} ref={inputRef}>
+              <Input
+
+                _stack={{
+                  flex: 1
+                }}
+                onChangeText={(v) => {
+                  setSearchValue(v)
+                  console.log(inputRef)
+                }}
+                value={searchValue}
+              />
+              <Button onPress={() => filter()} w='1/5'>Ir</Button>
+            </HStack>
+          )
+        }}
       >
-        {universities.map((i) => (
-          <Select.Item label={`${i.NOME_DA_IES} - ${i.SIGLA}`} value={i.CODIGO_DA_IES} />
+        {filtered.map((i) => (
+          <Select.Item label={`${i.NOME_DA_IES} - ${i.SIGLA}`} value={String(i.CODIGO_DA_IES)} />
         ))}
       </Select>
       <Input

@@ -19,8 +19,6 @@ export default function Page() {
         password
       })
 
-      console.log(error)
-
       if (error) throw new Error(error.message)
 
       if (data) router.push('home')

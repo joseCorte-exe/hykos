@@ -155,7 +155,7 @@ export default function Home() {
               description={params.description as string}
               title={params.title as string}
               service={params.service as string}
-              image={params.image}
+              image={String(params.image) ?? ''}
             />
           )
           : (

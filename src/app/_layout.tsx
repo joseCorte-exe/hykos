@@ -1,9 +1,22 @@
+import crashlytics from '@react-native-firebase/crashlytics';
 import { Slot } from "expo-router";
 import { NativeBaseProvider, extendTheme } from "native-base";
-import { LogBox } from 'react-native';
+import { useEffect } from 'react';
 import Toast from 'react-native-toast-message';
-LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-LogBox.ignoreAllLogs();//Ignore all log notifications
+import * as Sentry from 'sentry-expo';
+
+async function onSignIn() {
+  crashlytics().log('User signed in.');
+  await Promise.all([
+    crashlytics()
+  ]);
+}
+
+Sentry.init({
+  dsn: 'https://57b0f188109a5be19e7f71845ee8ddac@o4505998556266496.ingest.sentry.io/4505998559870976',
+  // enableInExpoDevelopment: true,
+  debug: true,
+});
 
 // Root (Native Base Provider, _App.tsx, Global Layout)
 export default function Root() {
@@ -17,6 +30,11 @@ export default function Root() {
       initialColorMode: 'light'
     }
   });
+
+  useEffect(() => {
+    onSignIn()
+    crashlytics().log('App mounted.');
+  }, [])
 
   return (
     <NativeBaseProvider theme={theme}>

@@ -1,20 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useEffect } from "react";
+import { View } from 'react-native';
+
+async function onSignIn() {
+  crashlytics().log('User signed in.');
+  await Promise.all([
+    crashlytics()
+  ]);
+}
 
 export default function App() {
+  useEffect(() => {
+    onSignIn()
+    crashlytics().log('App mounted.');
+  }, [])
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

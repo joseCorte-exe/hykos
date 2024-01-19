@@ -43,9 +43,9 @@ export default function Home() {
       <Modal isVisible={open} close={() => setOpen(false)}>
         <ScrollView>
           <TouchableOpacity activeOpacity={1}>
-            <Text color='blue.600' fontSize='16' fontWeight='medium' alignSelf='flex-start'>Procedimento Sugestivo</Text>
+            <Text color='blue.600' fontSize='16' fontWeight='medium' alignSelf='flex-start'>Ações no Percurso </Text>
             <Text mt={5}>{skill.suggestive_procedure?.replaceAll(';', '\n')}</Text>
-            <Text color='blue.600' fontSize='16' fontWeight='medium' alignSelf='flex-start' mt={10}>Procedimento Sugestivo</Text>
+            <Text color='blue.600' fontSize='16' fontWeight='medium' alignSelf='flex-start' mt={10}>Formas de Avaliação</Text>
             <Text mt={5}>{skill?.assessment_criteria?.replaceAll('.', '\n')?.replaceAll(':', ':\n')}</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -60,7 +60,7 @@ export default function Home() {
           <Image alt='' source={{ uri: skill.image }} resizeMode="cover" size='full' />
         </Box>
         <VStack padding='6' space='2'>
-          <Text color='blue.600' fontSize='16' fontWeight='medium'>{skill?.title}</Text>
+          <Text color='blue.600' fontSize='16' fontWeight='medium'>Consiste em...</Text>
           <Text color='gray.600'>{skill?.description}</Text>
         </VStack>
         {params.service === ServiceEnum.SKILLS && <VStack padding='6' space='2'>

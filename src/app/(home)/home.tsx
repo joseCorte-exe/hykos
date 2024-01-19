@@ -1,11 +1,13 @@
 import { Card } from '@components/card';
-import { Input } from '@components/form';
+import { Button, Input } from '@components/form';
+import { Modal } from '@components/modal';
 import Text from "@components/text";
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '@lib/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Stack, router } from 'expo-router';
 import debounce from 'lodash.debounce';
-import { Box, FlatList, HStack, ScrollView, Select, VStack } from 'native-base';
+import { Box, Checkbox, FlatList, HStack, ScrollView, Select, VStack } from 'native-base';
 import { useEffect, useMemo, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import Toast from "react-native-toast-message";
@@ -17,6 +19,7 @@ export enum ServiceEnum {
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
+  const [open, setOpen] = useState(false)
   const [cardId, setCardId] = useState<number | string>()
   const [strategies, setStrategies] = useState([])
   const [skills, setSkills] = useState([])
@@ -96,7 +99,22 @@ export default function Home() {
     console.log(search)
   }
 
+  async function handleSaveHasViewWelcomeText(e: boolean) {
+    await AsyncStorage.setItem('welcome', String(e))
+  }
+
   useEffect(() => {
+    async function getShowWelcome() {
+      try {
+        const showWelcome = await AsyncStorage.getItem('welcome')
+        console.log('aqui', showWelcome)
+        setOpen(showWelcome !== 'true')
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getShowWelcome()
+
     handleGetStrategies()
     handleGetSkills()
   }, [])
@@ -181,6 +199,22 @@ export default function Home() {
             </VStack>
           ) : <></>}
         </VStack>
+        <Modal isVisible={open} close={() => setOpen(false)} height={400} >
+          <VStack space={10}>
+            <VStack space={6}>
+              <Text>
+                Olá professor(a)!
+                Bem-vindo(a) ao nosso aplicativo.
+                Estamos muito felizes em tê-lo(a) conosco! Este aplicativo foi criado para tornar o processo de preparação de suas aulas eficiente e dinâmico.
+                Explore as funcionalidades disponíveis, projetadas para simplificar seu trabalho e enriquecer a experiência de ensino.
+                Aproveite ao máximo o aplicativo e, caso tenha alguma dúvida ou sugestão, nossa equipe está à disposição para oferecer suporte.
+                Esperamos ser parte integrante do seu sucesso educacional!
+              </Text>
+              <Checkbox value='false' _text={{ fontSize: 12 }} onChange={handleSaveHasViewWelcomeText}>não mostrar novamente</Checkbox>
+            </VStack>
+            <Button onPress={() => setOpen(false)}>Continuar</Button>
+          </VStack>
+        </Modal>
       </ScrollView>
     </>
   )
