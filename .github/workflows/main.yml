@@ -1,0 +1,52 @@
+
+name: Build Android App (Luminy)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Publish (Android)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: J--DdPtzUwN7aFo14vsG9ItKByfynDRJ24fyW51E
+
+      - name: Install Dependencies and configuring app
+        run: npm install
+
+      - name: Configuring App
+        run: TENANT_ID=luminy yarn raise:config
+
+      - name: Debug
+        run: cat app.json
+
+      # - name: Building App
+      #   run: eas build -p android --profile android-production --auto-submit-with-profile=production --no-wait
+
+      - name: Building App
+        run: eas build -p android --profile android-production --output ./build-android.aab --local
+
+      - name: Publish to Play Store
+        if: success()
+        run: eas submit -p android --path ./build-android.aab --non-interactive
