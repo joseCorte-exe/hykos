@@ -9,7 +9,11 @@ on:
 jobs:
   build:
     name: Build and Publish (Android)
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - expo
+      - react-native
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
