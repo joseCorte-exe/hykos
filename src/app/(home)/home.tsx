@@ -107,7 +107,6 @@ export default function Home() {
     async function getShowWelcome() {
       try {
         const showWelcome = await AsyncStorage.getItem('welcome')
-        console.log('aqui', showWelcome)
         setOpen(showWelcome !== 'true')
       } catch (err) {
         console.log(err)
@@ -199,16 +198,20 @@ export default function Home() {
             </VStack>
           ) : <></>}
         </VStack>
-        <Modal isVisible={open} close={() => setOpen(false)} height={400} >
+        <Modal isVisible={open} close={() => setOpen(false)} height={600} >
           <VStack space={10}>
             <VStack space={6}>
-              <Text>
-                Olá professor(a)!
-                Bem-vindo(a) ao nosso aplicativo.
-                Estamos muito felizes em tê-lo(a) conosco! Este aplicativo foi criado para tornar o processo de preparação de suas aulas eficiente e dinâmico.
-                Explore as funcionalidades disponíveis, projetadas para simplificar seu trabalho e enriquecer a experiência de ensino.
-                Aproveite ao máximo o aplicativo e, caso tenha alguma dúvida ou sugestão, nossa equipe está à disposição para oferecer suporte.
-                Esperamos ser parte integrante do seu sucesso educacional!
+              <Text>Olá, professor(a)!</Text>
+              <Text>Bem-vindo (a) ao nosso aplicativo.</Text>
+              <Text>Estamos muito felizes em tê-lo(a) conosco!</Text>
+              <Text>Este aplicativo foi criado para tornar o processo de preparação de suas aulas eficiente e dinâmico.</Text>
+              <Text textAlign={'justify'}>
+                Este aplicativo foi criado para tornar o processo de preparação de suas aulas eficiente e dinâmico.{'\n'}
+                Explore as funcionalidades disponíveis projetadas para simplificar seu trabalho e enriquecer a experiência de ensino.{'\n'}
+                Aproveite ao máximo o aplicativo e, caso tenha alguma dúvida ou sugestão, nossa equipe está à disposição para oferecer suporte. E-mail:{" "}
+                <Text>luizahelena.arantes@hotmail.com</Text>{'\n'}
+                {'\n'}
+                <Text fontWeight='bold'>Estamos empolgados por tê-lo(a) conosco e ansiosos para ser parte integrante do seu sucesso educacional.{'\n'}</Text>
               </Text>
               <Checkbox value='false' _text={{ fontSize: 12 }} onChange={handleSaveHasViewWelcomeText}>não mostrar novamente</Checkbox>
             </VStack>

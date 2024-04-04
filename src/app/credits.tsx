@@ -1,19 +1,14 @@
+import { Button } from "@components/form";
 import Text from "@components/text";
-import { UseUserRegisteringType } from "@store/useUserRegistering";
 import { HStack, VStack } from "native-base";
-
-type FormErrorStateType = {
-  path: string | number | undefined,
-  message: string
-}
-
-type PageComponentType = {
-  errors?: FormErrorStateType
-} & UseUserRegisteringType
+import { Linking, ScrollView } from "react-native";
 
 export default function Page() {
+  const openUrl = async () => {
+    await Linking.openURL("https://api.whatsapp.com/send?phone=551112345678")
+  }
   return (
-    <VStack space='28' h='full' justifyContent='center' p={6}>
+    <VStack space='28' h='full' justifyContent='center' p={6} mt='8'>
       <VStack space='2'>
         <Text fontSize='24' color='blue.600' textAlign='center' mb='10'>HelpStudies</Text>
         <HStack alignItems='center'>
@@ -21,8 +16,8 @@ export default function Page() {
         <Text>Créditos</Text>
       </VStack>
 
-      <VStack>
-        <VStack space='2'>
+      <VStack space='2' display='full' flex={1} h='full'>
+        <ScrollView style={{ flex: 1 }}>
           <Text>
             {`
               Equipe de Desenvolvimento 
@@ -68,7 +63,8 @@ export default function Page() {
               Livro: Manual de Avaliação Formativa e Somativa do Aprendizado do aluno
             `}
           </Text>
-        </VStack>
+        </ScrollView>
+        <Button onPress={() => openUrl}>Contato</Button>
       </VStack>
 
       <VStack w='full' alignItems='center' space='1'>
