@@ -47,7 +47,7 @@ jobs:
       - run: echo "TENANT_ID=${{ github.event.inputs.tenant }}" >> $GITHUB_ENV
 
       - name: Print TENANT_ID
-      - run: echo $TENANT_ID
+      - run: echo "$TENANT_ID"
 
       - name: Install Dependencies and configuring app
         run: npm install
