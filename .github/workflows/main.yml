@@ -6,7 +6,12 @@ name: Build Android App (Luminy)
 #     branches:
 #       - main
       
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      tenant:
+        description: 'Tenant name'
+        required: true
 
 jobs:
   build:
