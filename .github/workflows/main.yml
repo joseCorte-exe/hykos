@@ -1,4 +1,3 @@
-
 name: Build Android App (Luminy)
 
 # on:
@@ -38,17 +37,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Setup Expo and EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: J--DdPtzUwN7aFo14vsG9ItKByfynDRJ24fyW51E
-
       - name: Set TENANT env
         run: echo "TENANT_ID=${{ github.event.inputs.tenant }}" >> $GITHUB_ENV
 
       - name: Print TENANT_ID
         run: echo "$TENANT_ID"
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: J--DdPtzUwN7aFo14vsG9ItKByfynDRJ24fyW51E
 
       - name: Install Dependencies and configuring app
         run: npm install
