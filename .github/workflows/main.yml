@@ -43,11 +43,17 @@ jobs:
           eas-version: latest
           token: J--DdPtzUwN7aFo14vsG9ItKByfynDRJ24fyW51E
 
+      - name: Set TENANT env
+      - run: echo "TENANT_ID=${{ github.event.inputs.tenant }}" >> $GITHUB_ENV
+
+      - name: Print TENANT_ID
+      - run: echo $TENANT_ID
+
       - name: Install Dependencies and configuring app
         run: npm install
 
       - name: Configuring App
-        run: TENANT_ID=luminy yarn raise:config
+        run: yarn raise:config
 
       - name: Debug
         run: cat app.json
