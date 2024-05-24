@@ -16,10 +16,11 @@ on:
 jobs:
   build:
     name: Build and Publish (Android)
-    runs-on:
-      - self-hosted
-      - expo
-      - react-native
+    runs-on: ubuntu-latest
+    # runs-on:
+    #   - self-hosted
+    #   - expo
+    #   - react-native
 
     steps:
       - uses: actions/checkout@v3
