@@ -6,7 +6,8 @@ import { UseUserRegisteringType, useUserRegistering } from "@store/useUserRegist
 import { AuthError } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import { CheckIcon, HStack, Select, VStack } from "native-base";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { Dropdown } from 'react-native-element-dropdown';
 import Toast from "react-native-toast-message";
 import { z } from "zod";
 import { statesAndCities } from "../shared/mock/states-and-cities";
@@ -39,6 +40,8 @@ export default function Page() {
         email: useUser.email,
         password: useUser.password
       })
+
+      console.log(data)
 
       if (error) throw new Error(error.message)
 
@@ -97,8 +100,6 @@ export default function Page() {
   }
   const PageComponent = Pages[step]
 
-  console.log('render')
-
   return (
     <VStack space='28' h='full' justifyContent='center' p={6}>
       <VStack space='2'>
@@ -109,7 +110,7 @@ export default function Page() {
           </Button>
           <Text fontWeight='bold' fontSize='lg'>Etapa {step}/4</Text>
         </HStack>
-        <Text>Nos diga seu nome e email</Text>
+        <Text>{step === 1 ? 'Informe seu nome e e-mail' : step === 4 ? 'insira uma senha de acesso' : ''}</Text>
       </VStack>
 
       <VStack>
@@ -146,76 +147,96 @@ function FormEmail(props: PageComponentType) {
 }
 
 function FormInstitution(props: PageComponentType) {
-  const [searchValue, setSearchValue] = useState<string>('');
   const [filtered, setFiltered] = useState<typeof universities>(universities);
 
-  const inputRef = useRef()
-
-  const filter = (value: string) => {
-    const filteredAux = universities.filter(u => searchValue.length ? u.NOME_DA_IES.includes(searchValue) : true)
-    setFiltered(u => filteredAux)
-  }
+  const [searchValue, setSearchValue] = useState('');
+  const [isFocus, setIsFocus] = useState(false);
 
   return (
     <VStack space='2'>
-      <Select
-        placeholder="Instituição onde ensina"
-        onValueChange={props.setInstitution}
-        selectedValue={props.institution}
-        minWidth="200"
-        accessibilityLabel="Choose Service"
-        _selectedItem={{
-          bg: "teal.600",
-          endIcon: <CheckIcon size="5" />
-        }}
-        _actionSheetBody={{
-          ListHeaderComponent: (
-            <HStack alignItems='start' space={2} ref={inputRef}>
-              <Input
+      <VStack space="1">
+        <Text>Instituição a que você pertence</Text>
+        <Dropdown
+          data={universities.map(u => ({ label: `${u.NOME_DA_IES} - ${u.SIGLA}`, value: u.CODIGO_DA_IES }))}
+          search
+          labelField="label"
+          valueField="value"
+          placeholder={!isFocus ? 'Instituição onde ensina' : '...'}
+          searchPlaceholder="Instituição onde ensina"
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          onChange={item => {
+            props.setInstitution(String(item.value))
+            setIsFocus(false);
+          }}
+          value={+props.institution}
 
-                _stack={{
-                  flex: 1
-                }}
-                onChangeText={(v) => {
-                  setSearchValue(v)
-                  console.log(inputRef)
-                }}
-                value={searchValue}
-              />
-              <Button onPress={() => filter()} w='1/5'>Ir</Button>
-            </HStack>
-          )
-        }}
-      >
-        {filtered.map((i) => (
-          <Select.Item label={`${i.NOME_DA_IES} - ${i.SIGLA}`} value={String(i.CODIGO_DA_IES)} />
-        ))}
-      </Select>
-      <Input
-        placeholder="data de início"
-        onChangeText={props.setStartDate}
-        value={props.startDate}
-        mask="99/99/9999"
-        keyboardType="numeric"
-      />
-      <Select
-        placeholder="Nível de formação"
-        onValueChange={props.setDegree}
-        selectedValue={props.degree}
-        minWidth="200"
-        accessibilityLabel="Choose Degree"
-        _selectedItem={{
-          bg: "teal.600",
-          endIcon: <CheckIcon size="5" />
-        }}
-      >
-        <Select.Item label='Graduação' value='graduacao' />
-        <Select.Item label='Bacharelado' value='bacharelado' />
-        <Select.Item label='Licenciatura' value='licenciatura' />
-        <Select.Item label='Pós-Graduação' value='posgraduacao' />
-        <Select.Item label='Doutorado' value='doutorado' />
-        <Select.Item label='Mestrado' value='mestrado' />
-      </Select>
+          inputSearchStyle={{
+            borderRadius: 4,
+            fontSize: 12
+          }}
+
+          mode="modal"
+
+          style={{
+            borderColor: '#CBCBCA',
+            borderWidth: 1,
+            borderRadius: 4,
+            paddingHorizontal: 10,
+            paddingVertical: 12,
+          }}
+
+          containerStyle={{
+            borderRadius: 12,
+
+            paddingTop: 10,
+            paddingHorizontal: 10,
+
+            maxHeight: 500,
+
+            position: 'absolute',
+
+            bottom: 0,
+
+            width: '100%',
+          }}
+
+          placeholderStyle={{ color: '#a1a1a1', fontSize: 12 }}
+
+          iconStyle={{ width: 35 }}
+        />
+      </VStack>
+      <VStack space="1">
+        <Text>Ano de ingresso na instituição</Text>
+        <Input
+          placeholder="data de início"
+          onChangeText={props.setStartDate}
+          value={props.startDate}
+          mask="99/99/9999"
+          keyboardType="numeric"
+        />
+      </VStack>
+      <VStack space="1">
+        <Text>Seu nível de formação</Text>
+        <Select
+          placeholder="Nível de formação"
+          onValueChange={props.setDegree}
+          selectedValue={props.degree}
+          minWidth="200"
+          accessibilityLabel="Choose Degree"
+          _selectedItem={{
+            bg: "teal.600",
+            endIcon: <CheckIcon size="5" />
+          }}
+        >
+          <Select.Item label='Graduação' value='graduacao' />
+          <Select.Item label='Bacharelado' value='bacharelado' />
+          <Select.Item label='Licenciatura' value='licenciatura' />
+          <Select.Item label='Pós-Graduação' value='posgraduacao' />
+          <Select.Item label='Doutorado' value='doutorado' />
+          <Select.Item label='Mestrado' value='mestrado' />
+        </Select>
+      </VStack>
     </VStack>
   )
 }
@@ -223,37 +244,43 @@ function FormInstitution(props: PageComponentType) {
 function FormLocale(props: PageComponentType) {
   return (
     <VStack space='2'>
-      <Select
-        placeholder="Estado"
-        onValueChange={props.setState}
-        selectedValue={props.state}
-        minWidth="200"
-        accessibilityLabel="Choose Service"
-        _selectedItem={{
-          bg: "teal.600",
-          endIcon: <CheckIcon size="5" />
-        }}
-      >
-        {statesAndCities.estados.map((s) => (
-          <Select.Item label={`${s.nome} - ${s.sigla}`} value={s.sigla} />
-        ))}
-      </Select>
-      <Select
-        placeholder="Cidade"
-        onValueChange={props.setCity}
-        selectedValue={props.city}
-        minWidth="200"
-        accessibilityLabel="Choose Service"
-        _selectedItem={{
-          bg: "teal.600",
-          endIcon: <CheckIcon size="5" />
-        }}
-        isDisabled={!props.state}
-      >
-        {statesAndCities.estados.find((e) => e.sigla === props.state)?.cidades.map((c) => (
-          <Select.Item label={`${c}`} value={c} />
-        ))}
-      </Select>
+      <VStack space="1">
+        <Text>Estado</Text>
+        <Select
+          placeholder="Estado"
+          onValueChange={props.setState}
+          selectedValue={props.state}
+          minWidth="200"
+          accessibilityLabel="Choose Service"
+          _selectedItem={{
+            bg: "teal.600",
+            endIcon: <CheckIcon size="5" />
+          }}
+        >
+          {statesAndCities.estados.map((s) => (
+            <Select.Item label={`${s.nome} - ${s.sigla}`} value={s.sigla} />
+          ))}
+        </Select>
+      </VStack>
+      <VStack space="1">
+        <Text>Cidade</Text>
+        <Select
+          placeholder="Cidade"
+          onValueChange={props.setCity}
+          selectedValue={props.city}
+          minWidth="200"
+          accessibilityLabel="Choose Service"
+          _selectedItem={{
+            bg: "teal.600",
+            endIcon: <CheckIcon size="5" />
+          }}
+          isDisabled={!props.state}
+        >
+          {statesAndCities.estados.find((e) => e.sigla === props.state)?.cidades.map((c) => (
+            <Select.Item label={`${c}`} value={c} />
+          ))}
+        </Select>
+      </VStack>
     </VStack>
   )
 }

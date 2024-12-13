@@ -2,7 +2,7 @@ import { Button, Input } from "@components/form";
 import Text from "@components/text";
 import { Link } from "@components/text/link";
 import { supabase } from "@lib/supabase";
-import { AuthError } from "@supabase/supabase-js";
+import type { AuthError } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import { VStack } from "native-base";
 import { useState } from "react";
@@ -22,6 +22,7 @@ export default function Page() {
       if (error) throw new Error(error.message)
 
       if (data) router.push('home')
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (err: any | AuthError) {
       Toast.show({
         type: 'error',
