@@ -1,8 +1,8 @@
 import { Modal } from "@components/modal";
 import Text from "@components/text";
 import { supabase } from "@lib/supabase";
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { Box, Button, FlatList, Image, ScrollView, VStack } from 'native-base';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { ArrowBackIcon, Box, Button, FlatList, Image, ScrollView, VStack } from 'native-base';
 import { useEffect, useState } from "react";
 import { RefreshControl, TouchableOpacity } from 'react-native';
 import { ServiceEnum } from "../../home";
@@ -40,6 +40,9 @@ export default function ServiceInfo() {
 
   return (
     <>
+      <Button w="10" h="10" mt={8} mb={4} ml={4} rounded="full" bg="gray.200" onPress={() => router.back()}>
+        <ArrowBackIcon />
+      </Button>
       <Modal isVisible={open} close={() => setOpen(false)}>
         <ScrollView>
           <TouchableOpacity activeOpacity={1}>

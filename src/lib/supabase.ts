@@ -3,7 +3,7 @@ import 'react-native-url-polyfill/auto'
 
 export const supabase = createClient<Database>(
   'https://bucrdciuylogrmxvuzzl.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1Y3JkY2l1eWxvZ3JteHZ1enpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTgxMTQxOTMsImV4cCI6MjAxMzY5MDE5M30.1ocMacmmIsI-U_8wsZZcs6qR7CvBh7ewCbTuISAofvo'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1Y3JkY2l1eWxvZ3JteHZ1enpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA2MzE3MjQsImV4cCI6MjA1NjIwNzcyNH0.KbnH8EjTJdQTadx25_ufbxTee1ccDfDutFrEYUZR5kY'
 )
 
 export interface Database {

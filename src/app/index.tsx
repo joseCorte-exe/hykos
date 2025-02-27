@@ -1,8 +1,6 @@
 import { Button, Input } from "@components/form";
 import Text from "@components/text";
-import { Link } from "@components/text/link";
 import { supabase } from "@lib/supabase";
-import type { AuthError } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import { VStack } from "native-base";
 import { useState } from "react";
@@ -23,7 +21,7 @@ export default function Page() {
 
       if (data) router.push('home')
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    } catch (err: any | AuthError) {
+    } catch (err: any) {
       Toast.show({
         type: 'error',
         text1: err.message,
@@ -55,7 +53,7 @@ export default function Page() {
             secureTextEntry
           />
         </VStack>
-        <Link href='#'>Esqueceu sua senha?</Link>
+        {/* <Link href='#'>Esqueceu sua senha?</Link> */}
       </VStack>
 
       <VStack w='full' alignItems='center' space='1'>

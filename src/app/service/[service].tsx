@@ -1,11 +1,11 @@
 import { Card } from '@components/card';
-import { Input } from '@components/form';
+import { Button, Input } from '@components/form';
 import Text from "@components/text";
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '@lib/supabase';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import debounce from 'lodash.debounce';
-import { Box, Center, FlatList, Image, ScrollView, VStack } from 'native-base';
+import { ArrowBackIcon, Box, Center, FlatList, Image, ScrollView, VStack } from 'native-base';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, RefreshControl } from 'react-native';
 import { ServiceEnum } from '../home';
@@ -61,6 +61,9 @@ function Page({ skills: skillsProp, onRefresh, description, title, service, imag
 
   return (
     <ScrollView refreshControl={<RefreshControl refreshing={isRefreshing} enabled={true} onRefresh={handleRefresh} />}>
+      <Button w="10" h="10" mt={8} mb={4} ml={4} bg={'gray.200'} rounded="full" onPress={() => router.back()}>
+        <ArrowBackIcon />
+      </Button>
       <Box w='full' h='64'>
         <Image alt='banner' source={{ uri: image }} resizeMode="cover" size='full' />
       </Box>
@@ -70,7 +73,6 @@ function Page({ skills: skillsProp, onRefresh, description, title, service, imag
           <Text color='blue.600' fontSize='16' fontWeight='medium'>{title}</Text>
           <Text color='gray.600'>{description}</Text>
         </VStack>
-
         <VStack>
           <VStack mb='4'>
             <Text color='blue.600' fontSize='16' fontWeight='medium'>{serviceName}</Text>

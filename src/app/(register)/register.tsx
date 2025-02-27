@@ -212,7 +212,7 @@ function FormInstitution(props: PageComponentType) {
           placeholder="data de início"
           onChangeText={props.setStartDate}
           value={props.startDate}
-          mask="99/99/9999"
+          mask="9999"
           keyboardType="numeric"
         />
       </VStack>
@@ -314,6 +314,9 @@ function FormPassword(props: PageComponentType) {
           </Button>
         )}
       />
+
+      <Text>Senhas devem ser iguais</Text>
+      <Text>As senhas devem ter ao menos 6 caracteres</Text>
     </VStack>
   )
 }
